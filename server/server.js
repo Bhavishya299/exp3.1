@@ -1,16 +1,9 @@
-// server.js
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bcrypt = require("bcryptjs");
-require("dotenv").config();
-
-const User = require("./models/User");
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -18,41 +11,18 @@ app.use(express.json());
 app.use("/api", require("./routes/auth"));
 app.use("/api", require("./routes/protected"));
 
-// MongoDB Connection
+// ✅ SAFE MongoDB connection
 mongoose
-connect(process.env.MONGO_URI)
+    .connect(process.env.MONGO_URI)
     .then(() => {
         console.log("MongoDB Connected");
-        createTestUser(); // 👈 Create user after DB connects
+
+        const PORT = process.env.PORT || 5000;
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
     })
-    .catch((err) => console.log(err));
-
-// 🔹 Create Test User (RUNS ONLY ONCE)
-const createTestUser = async() => {
-    try {
-        const existingUser = await User.findOne({ email: "admin@test.com" });
-
-        if (!existingUser) {
-            const hashedPassword = await bcrypt.hash("123456", 10);
-
-            await User.create({
-                email: "admin@test.com",
-                password: hashedPassword,
-                role: "admin",
-            });
-
-            console.log("✅ Test Admin Created");
-        } else {
-            console.log("⚡ Test Admin Already Exists");
-        }
-    } catch (error) {
-        console.log("Error creating test user:", error);
-    }
-};
-
-// Start Server
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+    .catch((err) => {
+        console.log("DB Error:", err);
+    });
