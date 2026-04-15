@@ -1,7 +1,11 @@
-// pages/Login.js
-
 import { useForm } from "react-hook-form";
-import { TextField, Button, Box, Typography, CircularProgress } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Box,
+    Typography,
+    CircularProgress,
+} from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
@@ -9,7 +13,7 @@ import API from "../services/api";
 export default function Login() {
     const { register, handleSubmit } = useForm();
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate(); // ✅ for redirect
+    const navigate = useNavigate();
 
     const onSubmit = async(data) => {
         setLoading(true);
@@ -21,9 +25,7 @@ export default function Login() {
 
             alert("Login Success");
 
-            // ✅ Redirect to dashboard
             navigate("/dashboard");
-
         } catch (error) {
             alert("Login Failed");
         }
@@ -42,10 +44,7 @@ export default function Login() {
             }
         } >
         <
-        Typography variant = "h4"
-        mb = { 2 } >
-        Login <
-        /Typography>
+        Typography variant = "h4" > Login < /Typography>
 
         <
         form onSubmit = { handleSubmit(onSubmit) } >
@@ -62,13 +61,11 @@ export default function Login() {
 
         <
         Button fullWidth variant = "contained"
-        type = "submit"
-        sx = {
-            { mt: 2 } } >
-        { loading ? < CircularProgress size = { 24 }
-            color = "inherit" / > : "Login" } <
-        /Button> <
-        /form> <
-        /Box>
-    );
-}
+        type = "submit" > {
+            loading ? < CircularProgress size = { 24 }
+            /> : "Login"} <
+            /Button> <
+            /form> <
+            /Box>
+        );
+    }

@@ -4,14 +4,20 @@ const cors = require("cors");
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
+
+// ✅ Test route (fixes "Cannot GET /")
+app.get("/", (req, res) => {
+    res.send("Backend is running 🚀");
+});
 
 // Routes
 app.use("/api", require("./routes/auth"));
 app.use("/api", require("./routes/protected"));
 
-// ✅ SAFE MongoDB connection
+// MongoDB Connection
 mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {
