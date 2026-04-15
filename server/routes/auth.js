@@ -1,4 +1,5 @@
 router.post("/login", async(req, res) => {
+    console.log("BODY:", req.body);
     const { email, password } = req.body;
 
     // check user
