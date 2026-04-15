@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Test route (fixes "Cannot GET /")
+// ✅ Test route
 app.get("/", (req, res) => {
     res.send("Backend is running 🚀");
 });
@@ -17,11 +17,29 @@ app.get("/", (req, res) => {
 app.use("/api", require("./routes/auth"));
 app.use("/api", require("./routes/protected"));
 
+// ✅ IMPORT USER MODEL
+const User = require("./models/User");
+
 // MongoDB Connection
 mongoose
     .connect(process.env.MONGO_URI)
-    .then(() => {
+    .then(async() => {
         console.log("MongoDB Connected");
+
+        // 🔥 AUTO CREATE ADMIN USER
+        const existingUser = await User.findOne({ email: "admin@test.com" });
+
+        if (!existingUser) {
+            await User.create({
+                email: "admin@test.com",
+                password: "123456",
+                role: "admin",
+            });
+
+            console.log("✅ Test Admin Created");
+        } else {
+            console.log("⚡ Admin already exists");
+        }
 
         const PORT = process.env.PORT || 5000;
 
