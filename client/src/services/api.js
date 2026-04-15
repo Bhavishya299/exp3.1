@@ -4,7 +4,6 @@ const API = axios.create({
     baseURL: "https://exp3-1.onrender.com/api",
 });
 
-// Attach token automatically
 API.interceptors.request.use((req) => {
     const token = localStorage.getItem("token");
     if (token) {
